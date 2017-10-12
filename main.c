@@ -23,22 +23,23 @@ int main(int argc, char** argv) {
     //char* prt_arr;
     long length;
     if(argc==2){
-    FILE * f = fopen (argv[1], "rb");
+    FILE * f = fopen (argv[1], "rb"); 	//opens file specified on the cammand line
     
-    fseek (f, 0, SEEK_END);
-    length = ftell (f);
+    fseek (f, 0, SEEK_END);				//seeks to end of file, resets seek to the begining of the file finds length, 
+    length = ftell (f);					//allocates an array to the size of the file, then closes the file
     fseek (f, 0, SEEK_SET);
     buffer = malloc (length);
     fread (buffer, 1, length, f);
     fclose (f);
     
-    iterate=1;
+    iterate=1;							//used to check if array position was itterated on the last pass
+										
     
-    for (i =0; i <length; i ){
+    for (i =0; i <length; i ){			
         if(iterate==0)
             i++;
                     
-        if(buffer[i]=='/'&&buffer[i+1]=='*'){
+        if(buffer[i]=='/'&&buffer[i+1]=='*'){			//checks for comment block
             j=1;
             while(j){
                 printf("%c", buffer[i]);
@@ -50,7 +51,7 @@ int main(int argc, char** argv) {
             iterate=1;
         }
         
-        if(buffer[i]==';'||buffer[i]=='&'||buffer[i]=='|'||buffer[i]=='/'||
+        if(buffer[i]==';'||buffer[i]=='&'||buffer[i]=='|'||buffer[i]=='/'||		//checks for opperators with no following symbol
            buffer[i]=='['||buffer[i]==']'||buffer[i]==','||buffer[i]=='+'||
            buffer[i]=='-'||buffer[i]=='('||buffer[i]==')'){
             
@@ -59,7 +60,7 @@ int main(int argc, char** argv) {
             iterate=1;
         }
         
-        if(buffer[i]=='<'){
+        if(buffer[i]=='<'){														//the next few check for multi symbol operators
             printf("%c",buffer[i]);
             i++;
             if(buffer[i]=='='||buffer[i]=='>'||buffer[i]=='<'){
@@ -136,7 +137,7 @@ int main(int argc, char** argv) {
             iterate=1;
         }
         
-        if(buffer[i]=='"'){
+        if(buffer[i]=='"'){						//checks for literal strings
             j=1;
             printf("%c", buffer[i]);
             while(j){
@@ -150,7 +151,7 @@ int main(int argc, char** argv) {
             iterate=1;
         }
         
-        if(buffer[i]=='\''){
+        if(buffer[i]=='\''){					//checks for character literal
             for(j=0; j<3;j++){
                 printf("%c",buffer[i]);
                 i++;
@@ -159,7 +160,7 @@ int main(int argc, char** argv) {
             iterate=1;
         }
         
-        if(isalpha(buffer[i])){
+        if(isalpha(buffer[i])){					//checks for keywords and identifiers 
             j=1;
             k=0;
             char testS[25];
@@ -180,8 +181,8 @@ int main(int argc, char** argv) {
                 }
             }
             //printf("   testS==%s\n",testS);
-            if(key_check(testS)==0)
-                printf(" (Keyword)\n"); 
+            if(key_check(testS)==0)				//key_check tests if the found word is a keyword if not it's a identifier
+                printf(" (Keyword)\n"); 		
             else
                 printf(" (Identifier)\n");
             
@@ -189,7 +190,7 @@ int main(int argc, char** argv) {
             iterate=1;
         }
         
-        if(isdigit(buffer[i])||buffer[i]=='#'){
+        if(isdigit(buffer[i])||buffer[i]=='#'){			//checks for numeric literal
             printf("%c", buffer[i]);
             i++;
             while(isdigit(buffer[i])||buffer[i]=='.'||buffer[i]=='_'){
@@ -214,7 +215,7 @@ int main(int argc, char** argv) {
     return (EXIT_SUCCESS);
 }
 
-int key_check(char s[]){
+int key_check(char s[]){					//terrible implentation but data table that checks for keywords
     if(strcmp(s,"and")==0)
         return 0;
     else if(strcmp(s,"accessor")==0)
@@ -287,7 +288,7 @@ int key_check(char s[]){
         return 1;
 }
 
-void print_str(char s[]){
+/*void print_str(char s[]){					//function to print type but ended up doing that in main code
     int start = 1;
     int len = 100;
     
@@ -327,7 +328,7 @@ void print_str(char s[]){
         break;
     }
 }
-
+*/
 /*    char s[] = "1something";  print_str test code
     char t[] = "2something";
     char u[] = "3something";
